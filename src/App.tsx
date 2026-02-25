@@ -7,10 +7,11 @@ import { ProductPage } from './components/ProductPage';
 import { BundleBuilder } from './components/BundleBuilder';
 import { LoginModal } from './components/LoginModal';
 import { CheckoutModal } from './components/CheckoutModal';
+import { SizingModal } from './components/SizingModal';
 
 // --- Components ---
 
-const Navbar = ({ onOpenBundle, cartCount, onOpenCart, user, onLogin }: { onOpenBundle: () => void, cartCount: number, onOpenCart: () => void, user: boolean, onLogin: () => void }) => {
+const Navbar = ({ onOpenBundle, cartCount, onOpenCart, user, onLogin, onNavClick, onSizingClick }: { onOpenBundle: () => void, cartCount: number, onOpenCart: () => void, user: boolean, onLogin: () => void, onNavClick: (category: 'all' | 'new') => void, onSizingClick: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,13 +19,13 @@ const Navbar = ({ onOpenBundle, cartCount, onOpenCart, user, onLogin }: { onOpen
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => window.location.reload()}>
-            <span className="font-serif text-2xl font-bold tracking-tighter">Hamzil.</span>
+            <span className="font-serif text-2xl font-bold tracking-tighter text-brand-dark">Hamzil.</span>
           </div>
 
           <div className="hidden md:flex space-x-8 items-center">
-            <a href="#" className="text-sm font-medium hover:text-brand-pink transition-colors">Shop All</a>
-            <a href="#" className="text-sm font-medium hover:text-brand-pink transition-colors">New Drops</a>
-            <a href="#" className="text-sm font-medium hover:text-brand-pink transition-colors">Sizing Guide</a>
+            <button onClick={() => { onNavClick('all'); setIsOpen(false); }} className="text-sm font-medium hover:text-brand-pink transition-colors">Shop All</button>
+            <button onClick={() => { onNavClick('new'); setIsOpen(false); }} className="text-sm font-medium hover:text-brand-pink transition-colors">New Drops</button>
+            <button onClick={() => { onSizingClick(); setIsOpen(false); }} className="text-sm font-medium hover:text-brand-pink transition-colors">Sizing Guide</button>
             <button onClick={onOpenBundle} className="text-sm font-medium hover:text-brand-pink transition-colors flex items-center gap-1">
               <Sparkles className="w-3 h-3" /> Bundles
             </button>
@@ -64,10 +65,10 @@ const Navbar = ({ onOpenBundle, cartCount, onOpenCart, user, onLogin }: { onOpen
             className="md:hidden bg-brand-cream border-b border-black/5 overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
-              <a href="#" className="block py-2 text-lg font-serif">Shop All</a>
-              <a href="#" className="block py-2 text-lg font-serif">New Drops</a>
-              <a href="#" className="block py-2 text-lg font-serif">Sizing Guide</a>
-              <button onClick={onOpenBundle} className="block w-full text-left py-2 text-lg font-serif">Bundles</button>
+              <button onClick={() => { onNavClick('all'); setIsOpen(false); }} className="block w-full text-left py-2 text-lg font-serif">Shop All</button>
+              <button onClick={() => { onNavClick('new'); setIsOpen(false); }} className="block w-full text-left py-2 text-lg font-serif">New Drops</button>
+              <button onClick={() => { onSizingClick(); setIsOpen(false); }} className="block w-full text-left py-2 text-lg font-serif">Sizing Guide</button>
+              <button onClick={() => { onOpenBundle(); setIsOpen(false); }} className="block w-full text-left py-2 text-lg font-serif">Bundles</button>
               {!user && (
                 <button onClick={onLogin} className="block w-full text-left py-2 text-lg font-serif text-brand-pink">Login</button>
               )}
@@ -79,7 +80,7 @@ const Navbar = ({ onOpenBundle, cartCount, onOpenCart, user, onLogin }: { onOpen
   );
 };
 
-const Hero = () => {
+const Hero = ({ onShopClick }: { onShopClick: () => void }) => {
   return (
     <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background Image/Video Placeholder */}
@@ -105,7 +106,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-5xl md:text-8xl lg:text-9xl font-serif text-white mb-6 leading-[0.85]"
+          className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-serif text-white mb-6 leading-[0.85] tracking-tighter"
         >
           Magnetic<br />
           <span className="italic font-light text-brand-pink">Cat Eye.</span>
@@ -124,10 +125,16 @@ const Hero = () => {
           transition={{ delay: 0.5 }}
           className="flex flex-col sm:flex-row gap-5 justify-center"
         >
-          <button className="px-10 py-5 bg-white text-brand-dark font-bold rounded-full hover:bg-brand-pink hover:text-white transition-all transform hover:scale-105 shadow-2xl">
+          <button
+            onClick={onShopClick}
+            className="px-10 py-5 bg-white text-brand-dark font-bold rounded-full hover:bg-brand-pink hover:text-white transition-all transform hover:scale-105 shadow-2xl"
+          >
             Shop Cat Eye Collection
           </button>
-          <button className="px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-3">
+          <button
+            onClick={onShopClick}
+            className="px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+          >
             <Sparkles className="w-5 h-5 text-brand-pink" />
             Discover Trends
           </button>
@@ -178,21 +185,31 @@ const ProductCard: React.FC<{ product: typeof PRODUCTS[0], onClick: () => void }
   );
 };
 
-const NailBar = ({ onProductClick }: { onProductClick: (p: typeof PRODUCTS[0]) => void }) => {
+const NailBar = ({ onProductClick, filter }: { onProductClick: (p: typeof PRODUCTS[0]) => void, filter: 'all' | 'new' }) => {
+  const filteredProducts = filter === 'new'
+    ? PRODUCTS.filter(p => p.tag === 'New Drop')
+    : PRODUCTS;
+
   return (
-    <section className="py-24 px-4 max-w-7xl mx-auto">
-      <div className="flex justify-between items-end mb-12">
+    <section id="shop-section" className="py-24 px-4 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div>
-          <h2 className="text-4xl md:text-5xl font-serif mb-4">The Trend Report</h2>
-          <p className="text-gray-500 max-w-md">Our monthly drops of the most viral manicures. Hand-painted designs and specialist textures, delivered to your door.</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4">
+            {filter === 'new' ? 'The New Arrivals' : 'The Trend Report'}
+          </h2>
+          <p className="text-gray-500 max-w-md text-sm sm:text-base">
+            {filter === 'new'
+              ? 'Be the first to wear our latest specialist textures and limited edition magnetic shifts.'
+              : 'Our monthly drops of the most viral manicures. Hand-painted designs and specialist textures, delivered to your door.'}
+          </p>
         </div>
-        <a href="#" className="hidden md:flex items-center gap-2 text-sm font-semibold border-b border-black pb-1 hover:text-brand-pink hover:border-brand-pink transition-colors">
-          View All Collections <ArrowRight className="w-4 h-4" />
-        </a>
+        <button className="hidden md:flex items-center gap-2 text-sm font-semibold border-b border-black pb-1 hover:text-brand-pink hover:border-brand-pink transition-colors">
+          View All {filter === 'new' ? 'New' : 'Collections'} <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {PRODUCTS.map(product => (
+        {filteredProducts.map(product => (
           <ProductCard key={product.id} product={product} onClick={() => onProductClick(product)} />
         ))}
       </div>
@@ -211,9 +228,9 @@ const BundleSection = ({ onOpenBundle }: { onOpenBundle: () => void }) => {
         <img src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=2560&auto=format&fit=crop" className="w-full h-full object-cover" alt="Background" />
       </div>
       <div className="max-w-7xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-        <div className="md:w-1/2">
-          <span className="text-brand-pink font-bold tracking-widest uppercase text-sm mb-4 block">Limited Time Offer</span>
-          <h2 className="text-5xl md:text-7xl font-serif mb-6">Curate Your<br />Rotation</h2>
+        <div className="md:w-1/2 text-center md:text-left">
+          <span className="text-brand-pink font-bold tracking-widest uppercase text-xs sm:text-sm mb-4 block">Limited Time Offer</span>
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6">Curate Your<br />Rotation</h2>
           <p className="text-white/80 text-lg mb-8 max-w-md">
             Mix and match any 3 viral styles and save 20%. The specialist's way to maintain a flawless manicure all month long.
           </p>
@@ -354,10 +371,21 @@ const SocialProof = () => {
       {/* Marquee Effect */}
       <div className="relative flex overflow-x-hidden">
         <div className="py-12 animate-marquee whitespace-nowrap flex gap-8">
-          {[...REVIEWS, ...REVIEWS, ...REVIEWS].map((review, i) => (
+          {[...REVIEWS, ...REVIEWS].map((review, i) => (
             <div key={i} className="inline-block w-80 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 whitespace-normal">
-              <div className="flex gap-1 mb-3">
-                {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-4 h-4 fill-brand-pink text-brand-pink" />)}
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map(s => (
+                    <Star
+                      key={s}
+                      className={cn(
+                        "w-3.5 h-3.5",
+                        s <= review.rating ? "fill-brand-pink text-brand-pink" : "fill-gray-100 text-gray-200"
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className="text-[10px] text-gray-300 font-medium uppercase tracking-tighter">{review.date}</span>
               </div>
               <p className="text-lg font-serif italic mb-4">"{review.text}"</p>
               <p className="text-xs font-bold uppercase tracking-wider text-gray-400">{review.user}</p>
@@ -366,10 +394,21 @@ const SocialProof = () => {
         </div>
 
         <div className="absolute top-0 py-12 animate-marquee2 whitespace-nowrap flex gap-8">
-          {[...REVIEWS, ...REVIEWS, ...REVIEWS].map((review, i) => (
+          {[...REVIEWS, ...REVIEWS].map((review, i) => (
             <div key={i} className="inline-block w-80 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 whitespace-normal">
-              <div className="flex gap-1 mb-3">
-                {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-4 h-4 fill-brand-pink text-brand-pink" />)}
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map(s => (
+                    <Star
+                      key={s}
+                      className={cn(
+                        "w-3.5 h-3.5",
+                        s <= review.rating ? "fill-brand-pink text-brand-pink" : "fill-gray-100 text-gray-200"
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className="text-[10px] text-gray-300 font-medium uppercase tracking-tighter">{review.date}</span>
               </div>
               <p className="text-lg font-serif italic mb-4">"{review.text}"</p>
               <p className="text-xs font-bold uppercase tracking-wider text-gray-400">{review.user}</p>
@@ -434,13 +473,23 @@ export default function App() {
   const [showBundleBuilder, setShowBundleBuilder] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showSizing, setShowSizing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [productFilter, setProductFilter] = useState<'all' | 'new'>('all');
 
   // Mock function to simulate adding to cart
   const handleAddToCart = () => {
     setCartCount(prev => prev + 1);
     // In a real app, we'd add the item to a cart array
+  };
+
+  const handleNavClick = (category: 'all' | 'new') => {
+    setActiveProduct(null); // Return to home if viewing a product
+    setProductFilter(category);
+    setTimeout(() => {
+      document.getElementById('shop-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const handleCheckoutClick = () => {
@@ -465,9 +514,11 @@ export default function App() {
       <Navbar
         onOpenBundle={() => setShowBundleBuilder(true)}
         cartCount={cartCount}
-        onOpenCart={handleCheckoutClick} // For demo, cart icon goes straight to checkout logic
+        onOpenCart={handleCheckoutClick}
         user={isLoggedIn}
         onLogin={() => setShowLogin(true)}
+        onNavClick={handleNavClick}
+        onSizingClick={() => setShowSizing(true)}
       />
 
       <AnimatePresence mode="wait">
@@ -477,6 +528,7 @@ export default function App() {
             product={activeProduct}
             onBack={() => setActiveProduct(null)}
             onOpenBundle={() => setShowBundleBuilder(true)}
+            onOpenSizing={() => setShowSizing(true)}
             onAddToCart={handleAddToCart}
           />
         ) : (
@@ -486,8 +538,8 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <Hero />
-            <NailBar onProductClick={setActiveProduct} />
+            <Hero onShopClick={() => handleNavClick('all')} />
+            <NailBar onProductClick={setActiveProduct} filter={productFilter} />
             <BundleSection onOpenBundle={() => setShowBundleBuilder(true)} />
             <QuizSection />
             <SocialProof />
@@ -517,6 +569,11 @@ export default function App() {
           <CheckoutModal
             onClose={() => setShowCheckout(false)}
             cartTotal={cartCount * 899}
+          />
+        )}
+        {showSizing && (
+          <SizingModal
+            onClose={() => setShowSizing(false)}
           />
         )}
       </AnimatePresence>

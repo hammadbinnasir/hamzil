@@ -3,8 +3,8 @@ export const PRODUCTS = [
     id: '1',
     name: 'Mystic Emerald Cat Eye',
     price: 899,
-    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1000&auto=format&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1000&auto=format&fit=crop',
+    image: '/cateye_1.jpg',
+    hoverImage: '/2.jpg',
     tag: 'Viral Magnetic',
     shape: 'Almond',
     category: 'Cat Eye',
@@ -15,8 +15,8 @@ export const PRODUCTS = [
     id: '2',
     name: 'Velvet Rose Cat Eye',
     price: 899,
-    image: 'https://images.unsplash.com/photo-1604654894610-df490982570d?q=80&w=1000&auto=format&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1604654894610-df490982570d?q=80&w=1000&auto=format&fit=crop',
+    image: '/2.jpg',
+    hoverImage: '/3.jpg',
     tag: 'Premium Collection',
     shape: 'Coffin',
     category: 'Cat Eye',
@@ -27,8 +27,8 @@ export const PRODUCTS = [
     id: '3',
     name: 'Midnight Galaxy Cat Eye',
     price: 899,
-    image: 'https://images.unsplash.com/photo-1607535370464-2673a846067f?q=80&w=1000&auto=format&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1607535370464-2673a846067f?q=80&w=1000&auto=format&fit=crop',
+    image: '/3.jpg',
+    hoverImage: '/4.jpg',
     tag: 'New Drop',
     shape: 'Stiletto',
     category: 'Cat Eye',
@@ -39,8 +39,8 @@ export const PRODUCTS = [
     id: '4',
     name: 'Pearl Flare Cat Eye',
     price: 899,
-    image: 'https://images.unsplash.com/photo-1639151525992-809635b4306c?q=80&w=1000&auto=format&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1639151525992-809635b4306c?q=80&w=1000&auto=format&fit=crop',
+    image: '/4.jpg',
+    hoverImage: '/5.jpg',
     tag: 'Trending',
     shape: 'Short Square',
     category: 'Cat Eye',
@@ -52,20 +52,37 @@ export const PRODUCTS = [
 export const REVIEWS = [
   {
     id: 1,
-    user: "@nails_by_luna",
-    text: "I've tried every press-on brand, and Hamzil's magnetic cat-eye is the only one that actually looks like real gel extension. The shift is insane! 💅✨",
+    user: "Ayesha K. (Lahore)",
+    date: "2 days ago",
+    text: "Literally took me 10 minutes to apply the Emerald set. The magnet tool is so fun to use! Definitely looks like a 5k salon job.",
     rating: 5
   },
   {
     id: 2,
-    user: "@beauty.junkie",
-    text: "Minimal damage and so easy to apply. The 'Glazed Donut' set is my new holy grail for the office.",
-    rating: 5
+    user: "Zainab R. (Karachi)",
+    date: "1 week ago",
+    text: "The Velvet Rose shift is stunning. Lasted 2 weeks with just the adhesive tabs. Only giving 4 stars because I wish there were more thumb size options.",
+    rating: 4
   },
   {
     id: 3,
-    user: "@kristen.m",
-    text: "Everyone asks where I get my nails done. They can't believe they're press-ons from Hamzil. The Velvet Rose is just beautiful.",
+    user: "Mahnoor J. (Islamabad)",
+    date: "3 days ago",
+    text: "Midnight Galaxy is out of this world! 🌌 High quality and the packaging is so luxury. Perfect for wedding season.",
     rating: 5
+  },
+  {
+    id: 4,
+    user: "Sara M. (Faisalabad)",
+    date: "Oct 12",
+    text: "Solid 4.5/5. The cat eye effect is very strong. Best press-ons I've found in Pakistan so far. Shipping was fast too.",
+    rating: 5
+  },
+  {
+    id: 5,
+    user: "Dua A. (Rawalpindi)",
+    date: "Nov 5",
+    text: "Bought the bundle and saved so much. The shapes are very consistent. Reusable as promised, just be gentle with removal!",
+    rating: 4
   }
 ];

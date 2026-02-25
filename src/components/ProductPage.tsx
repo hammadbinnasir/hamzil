@@ -9,10 +9,11 @@ interface ProductPageProps {
   product: typeof PRODUCTS[0];
   onBack: () => void;
   onOpenBundle: () => void;
+  onOpenSizing: () => void;
   onAddToCart: (quantity: number, size: string | null) => void;
 }
 
-export const ProductPage: React.FC<ProductPageProps> = ({ product, onBack, onOpenBundle, onAddToCart }) => {
+export const ProductPage: React.FC<ProductPageProps> = ({ product, onBack, onOpenBundle, onOpenSizing, onAddToCart }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [showCamera, setShowCamera] = useState(false);
@@ -21,7 +22,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({ product, onBack, onOpe
   const images = [
     { type: 'image', src: product.image, alt: product.name },
     { type: 'image', src: product.hoverImage, alt: 'Detail view' },
-    { type: 'video', src: 'https://images.unsplash.com/photo-1596462502278-27bfdd403348?q=80&w=1000&auto=format&fit=crop', alt: 'Video thumbnail' }
+    { type: 'video', src: '/cateye_1.jpg', alt: 'Process Video' }
   ];
 
   return (
@@ -139,7 +140,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({ product, onBack, onOpe
             <div className="mb-8">
               <div className="flex justify-between items-center mb-3">
                 <span className="font-medium">Select Size</span>
-                <button className="text-xs underline text-gray-500 flex items-center gap-1 hover:text-brand-pink">
+                <button
+                  onClick={onOpenSizing}
+                  className="text-xs underline text-gray-500 flex items-center gap-1 hover:text-brand-pink"
+                >
                   <Ruler className="w-3 h-3" /> Size Guide
                 </button>
               </div>
@@ -231,7 +235,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({ product, onBack, onOpe
 
       {/* Mobile Sticky Bar */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 lg:hidden z-40 pb-safe">
-        <button className="w-full bg-brand-dark text-white py-4 rounded-full font-bold text-lg shadow-xl">
+        <button
+          onClick={() => onAddToCart(quantity, selectedSize)}
+          className="w-full bg-brand-dark text-white py-4 rounded-full font-bold text-lg shadow-xl"
+        >
           Add to Cart — Rs. {(product.price * quantity).toFixed(2)}
         </button>
       </div>

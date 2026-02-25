@@ -128,7 +128,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
         initial={{ opacity: 0, scale: 0.9, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 40 }}
-        className="relative bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] border border-white/20"
+        className="relative bg-white w-full max-w-5xl rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[95vh] md:max-h-[90vh] border border-white/20"
       >
         {/* Main Content Areas */}
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -142,7 +142,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
             </div>
 
             {step !== 'success' && (
-              <nav className="flex items-center gap-2 text-xs font-medium mb-8">
+              <nav className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-medium mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
                 {breadcrumbs.map((b, i) => (
                   <React.Fragment key={b.id}>
                     <button
@@ -151,13 +151,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
                         if (steps.indexOf(b.id as any) < steps.indexOf(step)) setStep(b.id as any);
                       }}
                       className={cn(
-                        "transition-colors",
+                        "transition-colors shrink-0",
                         step === b.id ? "text-brand-pink" : "text-gray-400 hover:text-gray-600"
                       )}
                     >
                       {b.label}
                     </button>
-                    {i < breadcrumbs.length - 1 && <ChevronRight className="w-3 h-3 text-gray-300" />}
+                    {i < breadcrumbs.length - 1 && <ChevronRight className="w-3 h-3 text-gray-300 shrink-0" />}
                   </React.Fragment>
                 ))}
               </nav>
@@ -197,7 +197,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
                     <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-gray-400" /> Shipping Address
                     </h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="order-summary-mobile md:hidden mb-6">
+                      <OrderSummary />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <input
                         required
                         name="firstName"
@@ -260,11 +263,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
                     </div>
                   </section>
 
-                  <div className="pt-6 border-t flex items-center justify-between">
-                    <span className="text-xs text-gray-400">Secure 256-bit SSL encrypted checkout</span>
+                  <div className="pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <span className="text-[10px] text-gray-400 order-2 sm:order-1 text-center sm:text-left">Secure 256-bit SSL encrypted checkout</span>
                     <button
                       type="submit"
-                      className="bg-brand-dark text-white px-10 py-4 rounded-full font-bold hover:bg-brand-pink transition-all shadow-xl hover:shadow-brand-pink/20"
+                      className="w-full sm:w-auto bg-brand-dark text-white px-10 py-4 rounded-full font-bold hover:bg-brand-pink transition-all shadow-xl hover:shadow-brand-pink/20 order-1 sm:order-2"
                     >
                       Continue to Shipping
                     </button>
@@ -281,15 +284,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
                   className="space-y-8"
                 >
                   <div className="border border-gray-100 rounded-3xl overflow-hidden divide-y divide-gray-100">
-                    <div className="p-4 flex gap-4 text-sm">
+                    <div className="p-4 flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm">
                       <span className="text-gray-400 w-16">Contact</span>
                       <span className="flex-1 truncate">{formData.email}</span>
-                      <button onClick={prevStep} className="text-brand-pink font-medium hover:underline">Change</button>
+                      <button onClick={prevStep} className="text-brand-pink font-medium hover:underline text-left sm:text-right">Change</button>
                     </div>
-                    <div className="p-4 flex gap-4 text-sm">
+                    <div className="p-4 flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm">
                       <span className="text-gray-400 w-16">Ship to</span>
                       <span className="flex-1 truncate">{formData.address}, {formData.city}</span>
-                      <button onClick={prevStep} className="text-brand-pink font-medium hover:underline">Change</button>
+                      <button onClick={prevStep} className="text-brand-pink font-medium hover:underline text-left sm:text-right">Change</button>
                     </div>
                   </div>
 
