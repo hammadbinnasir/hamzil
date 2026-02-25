@@ -57,13 +57,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to send order notification');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.details || errorData.error || 'Failed to send order notification');
+      }
 
       setLoading(false);
       setStep('success');
     } catch (error) {
       console.error(error);
-      alert('There was an issue processing your order. Please try again.');
+      alert(`Checkout Error: ${error instanceof Error ? error.message : 'Please try again.'}`);
       setLoading(false);
     }
   };

@@ -11,39 +11,39 @@ app.use(express.json());
 
 // 1. Get Google OAuth URL
 app.get('/api/auth/google/url', (req, res) => {
-    const clientId = process.env.GOOGLE_CLIENT_ID;
-    const redirectUri = `${process.env.APP_URL}/auth/callback`;
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const redirectUri = `${process.env.APP_URL}/auth/callback`;
 
-    if (!clientId) {
-        return res.status(500).json({ error: 'Google Client ID not configured' });
-    }
+  if (!clientId) {
+    return res.status(500).json({ error: 'Google Client ID not configured' });
+  }
 
-    const params = new URLSearchParams({
-        client_id: clientId,
-        redirect_uri: redirectUri,
-        response_type: 'code',
-        scope: 'email profile openid',
-        access_type: 'offline',
-        prompt: 'consent'
-    });
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+    scope: 'email profile openid',
+    access_type: 'offline',
+    prompt: 'consent'
+  });
 
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-    res.json({ url: authUrl });
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  res.json({ url: authUrl });
 });
 
 // 2. Checkout & Email Notification
 app.post('/api/checkout', async (req, res) => {
-    const { formData, cartTotal, shippingCost, finalTotal } = req.body;
+  const { formData, cartTotal, shippingCost, finalTotal } = req.body;
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_APP_PASSWORD
-        }
-    });
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_APP_PASSWORD
+    }
+  });
 
-    const emailHtml = `
+  const emailHtml = `
     <div style="font-family: 'serif', 'Georgia', serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 20px;">
       <h1 style="color: #000; border-bottom: 2px solid #FFDBE9; padding-bottom: 10px;">New Order - Hamzil.</h1>
       
@@ -77,27 +77,34 @@ app.post('/api/checkout', async (req, res) => {
     </div>
   `;
 
-    try {
-        await transporter.sendMail({
-            from: `"Hamzil Store" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
-            subject: `🚨 NEW ORDER from ${formData.firstName} - Rs. ${finalTotal.toFixed(0)}`,
-            html: emailHtml
-        });
-
-        res.status(200).json({ success: true });
-    } catch (error) {
-        console.error('Email error:', error);
-        res.status(500).json({ error: 'Failed to send confirmation email' });
+  try {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
+      throw new Error('Email credentials (EMAIL_USER or EMAIL_APP_PASSWORD) are missing on the server.');
     }
+
+    await transporter.sendMail({
+      from: `"Hamzil Store" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: `🚨 NEW ORDER from ${formData.firstName} - Rs. ${finalTotal.toFixed(0)}`,
+      html: emailHtml
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('SERVER ERROR:', error);
+    res.status(500).json({
+      error: 'Failed to send confirmation email',
+      details: error instanceof Error ? error.message : String(error)
+    });
+  }
 });
 
 // 3. OAuth Callback Handler
 app.get('/auth/callback', (req, res) => {
-    const { code } = req.query;
+  const { code } = req.query;
 
-    if (code) {
-        res.send(`
+  if (code) {
+    res.send(`
       <html>
         <body>
           <script>
@@ -112,9 +119,9 @@ app.get('/auth/callback', (req, res) => {
         </body>
       </html>
     `);
-    } else {
-        res.status(400).send('Authentication failed');
-    }
+  } else {
+    res.status(400).send('Authentication failed');
+  }
 });
 
 export default app;
