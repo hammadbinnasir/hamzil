@@ -1,20 +1,28 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Hamzil - Cat Eye Specialist Store
 
-# Run and deploy your AI Studio app
+Luxury press-on nail artistry focused on trendy Cat Eye and Magnetic designs.
 
-This contains everything you need to run your app locally.
+## Features
+- **Shopify-Style Checkout**: Multi-step high-end checkout flow.
+- **Email Notifications**: Automatic order details sent to Gmail via Nodemailer.
+- **Dynamic Pricing**: Specialized pricing (Rs. 899) and delivery logic (Free shipping over Rs. 2000).
+- **Cat Eye Specialized**: Curated product catalog for magnetic nail trends.
 
-View your app in AI Studio: https://ai.studio/apps/3985c327-440e-4d54-9306-dbe21e6343b3
+## Local Setup
+1. `npm install`
+2. Configure `.env` with:
+   - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (for login)
+   - `EMAIL_USER`, `EMAIL_APP_PASSWORD` (for order notifications)
+   - `APP_URL=http://localhost:3000`
+3. `npm run dev`
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Deployment (Vercel)
+1. Push to GitHub.
+2. Connect repository to Vercel.
+3. **Environment Variables**: Add the following in Vercel Settings:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `EMAIL_USER` (Your Gmail)
+   - `EMAIL_APP_PASSWORD` (Gmail App Password)
+   - `APP_URL` (Your Vercel production URL, e.g., `https://hamzil.vercel.app`)
+4. The backend logic is handled via Vercel Serverless Functions (see `/api/index.ts`).
