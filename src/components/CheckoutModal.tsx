@@ -59,14 +59,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ onClose, cartTotal
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.details || errorData.error || 'Failed to send order notification');
+        throw new Error(errorData.details || errorData.error || `Server Error ${response.status}`);
       }
 
       setLoading(false);
       setStep('success');
     } catch (error) {
-      console.error(error);
-      alert(`Checkout Error: ${error instanceof Error ? error.message : 'Please try again.'}`);
+      console.error('Frontend Checkout Error:', error);
+      alert(`v2.0 - Checkout Error: ${error instanceof Error ? error.message : 'Unknown'}`);
       setLoading(false);
     }
   };
