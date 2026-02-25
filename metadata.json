@@ -1,0 +1,5 @@
+{
+  "name": "Hamzil",
+  "description": "Premium press-on nails e-commerce store with interactive try-on and bundle builder.",
+  "requestFramePermissions": ["camera"]
+}
